@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Pantera Rosa: El Misterio de los Signos (6x6)</title>
+    <link rel="icon" type="image/x-icon" href="./resources/favicon.ico">
+    
+    <style>
+        :root {
+            --rosa-pantera: #ff8da1;
+            --rosa-neon: #ff1493;
+            --fucsia-oscuro: #800040;
+            --negro-espia: #1a1a1a;
+            --gris-elegante: #2d2d2d;
+            --cromo-plata: #f5f5f5;
+            --crema-suave: #fff0f5;
+        }
+
+        body {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            background-color: var(--fucsia-oscuro);
+            background-image: linear-gradient(rgba(0,0,0,0.3) 2px, transparent 2px), linear-gradient(90deg, rgba(0,0,0,0.3) 2px, transparent 2px);
+            background-size: 25px 25px;
+            color: var(--cromo-plata);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            background-color: var(--negro-espia);
+            border: 4px solid var(--rosa-pantera);
+            border-radius: 6px;
+            padding: 25px;
+            width: 100%;
+            max-width: 950px;
+            box-shadow: 0px 0px 25px var(--rosa-neon);
+            text-align: center;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Remates de esquina retro-elegantes */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 20px; height: 20px;
+            border-top: 4px solid var(--rosa-neon);
+            border-left: 4px solid var(--rosa-neon);
+        }
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0; width: 20px; height: 20px;
+            border-bottom: 4px solid var(--rosa-neon);
+            border-right: 4px solid var(--rosa-neon);
+        }
+
+        h1 {
+            color: var(--rosa-pantera);
+            text-shadow: 2px 2px 0px #000, 0 0 15px var(--rosa-neon);
+            font-size: 3rem;
+            margin-top: 0;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-family: sans-serif;
+            font-size: 1.3rem;
+            color: var(--rosa-neon);
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .zona-imagen {
+            width: 100%;
+            height: 250px;
+            background-color: #0d0d0d;
+            border: 3px dashed var(--rosa-pantera);
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-style: italic;
+            color: #444;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px #000;
+        }
+
+        button, select {
+            background-color: var(--rosa-pantera);
+            color: var(--negro-espia);
+            font-family: inherit;
+            font-size: 1.3rem;
+            padding: 12px 25px;
+            border: 2px solid #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px #000;
+            transition: all 0.1s ease;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background-color: #fff;
+            color: var(--fucsia-oscuro);
+            box-shadow: 4px 4px 0px var(--rosa-neon);
+        }
+
+        button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+
+        input[type="text"], input[type="number"], select {
+            font-family: sans-serif;
+            background-color: var(--gris-elegante);
+            color: #fff;
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid var(--rosa-pantera);
+            border-radius: 4px;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .pantalla { display: none; }
+        .activa { display: block; }
+
+        .config-seccion {
+            font-family: sans-serif;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--fucsia-oscuro);
+            border-radius: 6px;
+            text-align: left;
+        }
+
+        .config-seccion h3 {
+            font-family: 'Impact', sans-serif;
+            color: var(--rosa-pantera);
+            margin-top: 0;
+            letter-spacing: 1px;
+        }
+
+        .config-seccion ul {
+            padding-left: 20px;
+        }
+
+        .config-seccion li {
+            margin-bottom: 8px;
+        }
+
+        #inputs-grupos {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .info-juego {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: var(--gris-elegante);
+            border: 2px solid var(--fucsia-oscuro);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .turno-actual {
+            padding: 6px 18px;
+            border-radius: 4px;
+            border: 2px solid #fff;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .reloj {
+            background-color: #000;
+            padding: 6px 18px;
+            border: 2px solid var(--rosa-neon);
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--rosa-neon);
+            box-shadow: 0 0 10px var(--rosa-neon);
+        }
+
+        /* TABLERO 6X6 */
+        .tablero {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 750px) {
+            .tablero { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (max-width: 500px) {
+            .tablero { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .carta {
+            height: 95px;
+            background-color: var(--gris-elegante);
+            background-image: linear-gradient(135deg, #3a3a3a 25%, transparent 25%), linear-gradient(225deg, #3a3a3a 25%, transparent 25%);
+            background-size: 12px 12px;
+            border: 3px solid var(--fucsia-oscuro);
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 4px 4px 0px #000;
+            user-select: none;
+            text-align: center;
+            box-sizing: border-box;
+            overflow: hidden;
+            color: var(--rosa-pantera);
+            text-shadow: 1px 1px 2px #000;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .carta:hover {
+            border-color: var(--rosa-neon);
+            transform: scale(1.03);
+        }
+
+        .carta.volteada {
+            background-color: var(--crema-suave);
+            background-image: none;
+            color: var(--negro-espia);
+            text-shadow: none;
+            font-family: 'Arial Black', sans-serif;
+            border-color: #fff;
+        }
+
+        .carta.emparejada {
+            background-color: #0d0d0d;
+            border-color: var(--rosa-neon);
+            visibility: hidden; 
+        }
+
+        .carta math {
+            font-size: 1.3rem;
+        }
+
+        .lista-resultados {
+            list-style: none;
+            padding: 0;
+            font-size: 1.5rem;
+        }
+        
+        .lista-resultados li {
+            margin: 12px 0;
+            padding: 12px;
+            background: rgba(0,0,0,0.5);
+            border-left: 5px solid var(--rosa-pantera);
+        }
+        
+        .ganador {
+            font-size: 2.3rem;
+            color: var(--rosa-pantera);
+            text-shadow: 0 0 15px var(--rosa-neon);
+            margin: 25px 0;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div id="pantalla-inicio" class="pantalla activa">
+            <div class="zona-imagen"><img src="./resources/imagen_intro.png" alt="La Pantera Rosa Intro" width="400" onerror="this.style.display='none'"></div>
+            <h1>La Pantera Rosa</h1>
+            <h2>El Misterio de la Regla de los Signos (6x6)</h2>
+
+            <div class="config-seccion">
+               <h3>🕵️‍♂️ Notas del Caso Secreto</h3>
+               <ul>
+                 <li><b>Estructura del Caso:</b> El mapa de pistas se compone de una cuadrícula de **6x6 (36 diamantes)** con 18 misterios numéricos.</li>
+                 <li><b>Misión:</b> Enlazar las huellas de la <b>Operación Aritmética</b> con su correspondiente <b>Resultado Entero Único</b> aplicando las leyes de los signos.</li>
+                 <li><b>Mecánica:</b> Si revelas una pista correcta, <b>ganas 1 diamante rosa y mantienes el turno de investigación</b>. Si fallas, cedes el caso al equipo contrario.</li>
+               </ul>
+            </div>
+          
+            <div class="config-seccion">
+                <h3>⏳ Configuración de la Operación</h3>
+                <label><b>Tiempo de Investigación:</b></label>
+                <select id="tiempo-limite">
+                    <option value="10">10 Minutos</option>
+                    <option value="30">30 Minutos</option>
+                    <option value="60">60 Minutos</option>
+                </select>
+                <br><br>
+                <label><b>Agencias de Detectives (Equipos):</b></label>
+                <input type="number" id="num-grupos" min="1" max="6" value="2" onchange="generarInputsGrupos()">
+                <div id="inputs-grupos"></div>
+            </div>
+
+            <button onclick="iniciarJuego()">¡Empezar Investigación!</button>
+          
+            <div class="config-seccion" style="text-align: center; font-size: 0.85rem;">
+              Adaptado al Sistema Educativo • Rejilla Rosa de 6x6 Elementos Diferentes.<br>
+              <a href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="./resources/CC_BY_SA.png" alt="CC BY-SA" style="margin-top:5px;"></a>
+            </div>
+        </div>
+
+        <div id="pantalla-juego" class="pantalla">
+            <div class="zona-imagen"><img src="./resources/imagen_proceso.png" alt="Investigación en Proceso" width="400" onerror="this.style.display='none'"></div>
+            <div class="info-juego">
+                <div id="marcador-turnos">Turno de: <span id="grupo-actual" class="turno-actual">-</span></div>
+                <div class="reloj">Tiempo restante: <span id="cuenta-atras">00:00</span></div>
+                <div id="puntuaciones-vivas"></div>
+            </div>
+            <div class="tablero" id="tablero"></div>
+        </div>
+
+        <div id="pantalla-resultados" class="pantalla">
+            <div class="zona-imagen"><img src="./resources/imagen_fin.png" alt="Caso Resuelto" width="400" onerror="this.style.display='none'"></div>
+            <h1>Caso Cerrado</h1>
+            <div id="ganador-anuncio" class="ganador"></div>
+            <ul id="lista-puntuaciones" class="lista-resultados"></ul>
+            <button onclick="reiniciarJuego()">Reabrir el Caso (Volver a Jugar)</button>
+        </div>
+    </div>
+
+    <script>
+        // Banco de datos intacto (18 parejas con resultados enteros completamente únicos)
+        const bancoFormulas = [
+            { nombre: "(-4) · (+5)", expresion: `<math><mo>-</mo><mn>20</mn></math>`, idReal: 1 },
+            { nombre: "(-6) · (-4)", expresion: `<math><mo>+</mo><mn>24</mn></math>`, idReal: 2 },
+            { nombre: "(+10) : (-5)", expresion: `<math><mo>-</mo><mn>2</mn></math>`, idReal: 3 },
+            { nombre: "(-9) · (+5)", expresion: `<math><mo>-</mo><mn>45</mn></math>`, idReal: 4 },
+            { nombre: "(-28) : (-4)", expresion: `<math><mo>+</mo><mn>7</mn></math>`, idReal: 5 },
+            { nombre: "(+16) : (-4)", expresion: `<math><mo>-</mo><mn>4</mn></math>`, idReal: 6 },
+            { nombre: "(-2) · (+4)", expresion: `<math><mo>-</mo><mn>8</mn></math>`, idReal: 7 },
+            { nombre: "(-25) : (-5)", expresion: `<math><mo>+</mo><mn>5</mn></math>`, idReal: 8 },
+            { nombre: "(-3) · (-4)", expresion: `<math><mo>+</mo><mn>12</mn></math>`, idReal: 9 },
+            { nombre: "(+36) : (-4)", expresion: `<math><mo>-</mo><mn>9</mn></math>`, idReal: 10 },
+            { nombre: "(-18) : (-6)", expresion: `<math><mo>+</mo><mn>3</mn></math>`, idReal: 11 },
+            { nombre: "(-7) : (+7)", expresion: `<math><mo>-</mo><mn>1</mn></math>`, idReal: 12 },
+            
+            // 6 Operaciones adicionales del paso anterior
+            { nombre: "(-5) · (+6)", expresion: `<math><mo>-</mo><mn>30</mn></math>`, idReal: 13 },
+            { nombre: "(-8) · (-5)", expresion: `<math><mo>+</mo><mn>40</mn></math>`, idReal: 14 },
+            { nombre: "(+42) : (-7)", expresion: `<math><mo>-</mo><mn>6</mn></math>`, idReal: 15 },
+            { nombre: "(-3) · (-5)", expresion: `<math><mo>+</mo><mn>15</mn></math>`, idReal: 16 },
+            { nombre: "(+44) : (-4)", expresion: `<math><mo>-</mo><mn>11</mn></math>`, idReal: 17 },
+            { nombre: "(-14) : (-7)", expresion: `<math><mo>+</mo><mn>2</mn></math>`, idReal: 18 }
+        ];
+
+        // Paleta de colores para los grupos inspirada en variaciones de rosa y tonos complementarios retro
+        const coloresEquipos = ["#ff8da1", "#ff1493", "#ffb6c1", "#ff69b4", "#da70d6", "#ece0e2"];
+
+        let grupos = [];
+        let turnoActual = 0;
+        let cartas = [];
+        let cartasVolteadas = [];
+        let bloqueado = false;
+        let intervaloTemporizador;
+        let tiempoRestanteSegundos = 0;
+
+        window.onload = function() {
+            generarInputsGrupos();
+        };
+
+        function generarInputsGrupos() {
+            const numInput = document.getElementById('num-grupos');
+            const contenedor = document.getElementById('inputs-grupos');
+            
+            if (numInput && contenedor) {
+                const num = parseInt(numInput.value) || 2;
+                contenedor.innerHTML = '';
+                for (let i = 1; i <= num; i++) {
+                    const colorActual = coloresEquipos[(i - 1) % coloresEquipos.length];
+                    contenedor.innerHTML += `<div style="margin: 5px 0; display: flex; align-items: center;">
+                        <span style="color:${colorActual}; font-size:1.5rem; margin-right:10px; text-shadow: 0 0 5px ${colorActual};">🐾</span>
+                        <label style="color:#eee; font-size:1rem; min-width: 90px;">Agencia ${i}:</label>
+                        <input type="text" class="nombre-grupo" value="Agente ${i}" style="flex-grow: 1; max-width: 300px;">
+                    </div>`;
+                }
+            }
+        }
+
+        function cambiarPantalla(id) {
+            document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+            const p = document.getElementById(id);
+            if(p) p.classList.add('activa');
+        }
+
+        function iniciarJuego() {
+            const inputs = document.querySelectorAll('.nombre-grupo');
+            grupos = [];
+            inputs.forEach((input, index) => {
+                grupos.push({ 
+                    nombre: input.value, 
+                    puntos: 0,
+                    color: coloresEquipos[index % coloresEquipos.length]
+                });
+            });
+
+            turnoActual = 0;
+            cartasVolteadas = [];
+            bloqueado = false;
+
+            const minutosSeleccionados = parseInt(document.getElementById('tiempo-limite').value);
+            tiempoRestanteSegundos = minutosSeleccionados * 60;
+            actualizarRelojGrafico();
+            
+            clearInterval(intervaloTemporizador);
+            intervaloTemporizador = setInterval(controlarTiempo, 1000);
+            
+            actualizarMarcadores();
+            crearTablero();
+            cambiarPantalla('pantalla-juego');
+        }
+
+        function controlarTiempo() {
+            tiempoRestanteSegundos--;
+            actualizarRelojGrafico();
+
+            if (tiempoRestanteSegundos <= 0) {
+                clearInterval(intervaloTemporizador);
+                alert("¡Tiempo Agotado! El misterio ha quedado sin resolver.");
+                finalizarJuego();
+            }
+        }
+
+        function actualizarRelojGrafico() {
+            const minutes = Math.floor(tiempoRestanteSegundos / 60);
+            const seconds = tiempoRestanteSegundos % 60;
+            document.getElementById('cuenta-atras').innerText = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function crearTablero() {
+            const contenedorTablero = document.getElementById('tablero');
+            contenedorTablero.innerHTML = '';
+
+            let baraja = [];
+            bancoFormulas.forEach((item) => {
+                baraja.push({ id: item.idReal, contenido: item.nombre, tipo: 'nombre' });
+                baraja.push({ id: item.idReal, contenido: item.expresion, tipo: 'expresion' });
+            });
+
+            for (let i = baraja.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [baraja[i], baraja[j]] = [baraja[j], baraja[i]];
+            }
+            cartas = baraja;
+
+            cartas.forEach((carta, index) => {
+                const elementoCarta = document.createElement('div');
+                elementoCarta.classList.add('carta');
+                elementoCarta.dataset.index = index;
+                elementoCarta.innerText = "🔍"; 
+                elementoCarta.addEventListener('click', voltearCarta);
+                contenedorTablero.appendChild(elementoCarta);
+            });
+        }
+
+        function voltearCarta() {
+            if (bloqueado) return;
+            const index = this.dataset.index;
+            const cartaSeleccionada = cartas[index];
+
+            if (this.classList.contains('volteada') || this.classList.contains('emparejada')) return;
+
+            this.classList.add('volteada');
+            this.innerHTML = cartaSeleccionada.contenido;
+
+            cartasVolteadas.push({ elemento: this, datos: cartaSeleccionada });
+
+            if (cartasVolteadas.length === 2) {
+                comprobarPareja();
+            }
+        }
+
+        function comprobarPareja() {
+            bloqueado = true;
+            const [c1, c2] = cartasVolteadas;
+
+            if (c1.datos.id === c2.datos.id && c1.datos.tipo !== c2.datos.tipo) {
+                setTimeout(() => {
+                    c1.elemento.classList.add('emparejada');
+                    c2.elemento.classList.add('emparejada');
+                    grupos[turnoActual].puntos++;
+                    cartasVolteadas = [];
+                    bloqueado = false;
+                    actualizarMarcadores();
+                    comprobarFinJuego();
+                }, 800);
+            } else {
+                setTimeout(() => {
+                    c1.elemento.classList.remove('volteada');
+                    c2.elemento.classList.remove('volteada');
+                    c1.elemento.innerHTML = "🔍";
+                    c2.elemento.innerHTML = "🔍";
+                    cartasVolteadas = [];
+                    bloqueado = false;
+                    
+                    turnoActual = (turnoActual + 1) % grupos.length;
+                    actualizarMarcadores();
+                }, 1500);
+            }
+        }
+
+        function actualizarMarcadores() {
+            const grupoActivo = grupos[turnoActual];
+            const spanTurno = document.getElementById('grupo-actual');
+            
+            spanTurno.innerText = grupoActivo.nombre;
+            spanTurno.style.backgroundColor = grupoActivo.color;
+            spanTurno.style.boxShadow = `0 0 10px ${grupoActivo.color}`;
+
+            const contenedorPuntos = document.getElementById('puntuaciones-vivas');
+            contenedorPuntos.innerHTML = grupos.map(g => 
+                `<span style="border-bottom: 4px solid ${g.color}; padding-bottom: 2px; margin: 0 10px; display: inline-block; font-family:sans-serif; color:#fff;">
+                    ${g.nombre}: <b style="color:${g.color}; font-size:1.3rem;">${g.puntos}</b>
+                </span>`
+            ).join(' ');
+        }
+
+        function comprobarFinJuego() {
+            const cartasEmparejadas = document.querySelectorAll('.carta.emparejada').length;
+            if (cartasEmparejadas === cartas.length) {
+                clearInterval(intervaloTemporizador);
+                finalizarJuego();
+            }
+        }
+
+        function finalizarJuego() {
+            clearInterval(intervaloTemporizador);
+            const clasificacion = [...grupos].sort((a, b) => b.puntos - a.puntos);
+            
+            let textoGanador = "";
+            const anuncio = document.getElementById('ganador-anuncio');
+            
+            if (clasificacion.length > 1 && clasificacion[0].puntos === clasificacion[1].puntos) {
+                textoGanador = "¡Empate técnico! Cooperación entre agencias.";
+                anuncio.style.color = "var(--rosa-pantera)";
+                anuncio.style.textShadow = "0 0 10px var(--rosa-neon)";
+            } else {
+                textoGanador = `¡Caso Resuelto por: ${clasificacion[0].nombre}! 🏆`;
+                anuncio.style.color = clasificacion[0].color;
+                anuncio.style.textShadow = `0 0 15px ${clasificacion[0].color}`;
+            }
+
+            anuncio.innerText = textoGanador;
+
+            const lista = document.getElementById('lista-puntuaciones');
+            lista.innerHTML = '';
+            clasificacion.forEach((g, index) => {
+                lista.innerHTML += `<li style="border-left-color:${g.color}; color:#fff; font-family:sans-serif;">
+                    <span style="font-family:'Impact'; font-size:1.4rem; color:${g.color};">#${index + 1}</span> 
+                    <b>${g.nombre}</b> — Consiguió un total de ${g.puntos} diamantes matemáticos.
+                </li>`;
+            });
+
+            cambiarPantalla('pantalla-resultados');
+        }
+
+        function reiniciarJuego() {
+            cambiarPantalla('pantalla-inicio');
+            generarInputsGrupos();
+        }
+    </script>
+</body>
+</html>
